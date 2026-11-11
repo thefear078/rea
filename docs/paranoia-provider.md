@@ -42,4 +42,4 @@ Every answer carries the SHA-256 of the bytes Paranoia analysed. REA rejects an 
 
 `tests/boundary/providers/paranoia/paranoiaProvider.test.ts` covers configuration, target support and address handling without a process. The same file has live tests that run when `REA_PARANOIA_COMMAND` and `REA_PARANOIA_TEST_TARGET` are set: every advertised operation against a real binary, the digest check, and a closed session.
 
-The live tests have not been run yet. They need REA's process supervision, which on Windows needs the packaged native module; on Linux and macOS no extra module is needed.
+Verified on Windows 11 with Paranoia 0.7.0 (`paranoia query` from main) and REA's packaged Windows native module: the live tests pass on `notepad.exe` (PE, x86-64), a stripped Go `gofmt` for linux/amd64 (ELF) and one for darwin/arm64 (Mach-O, AArch64). Not yet run on Linux or macOS hosts.
