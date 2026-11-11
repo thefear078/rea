@@ -6,6 +6,7 @@ import { HopperProvider } from "../hopper/HopperProvider.js";
 import { GhidraProvider } from "../ghidra/GhidraProvider.js";
 import { IdaProvider } from "../ida/IdaProvider.js";
 import { KunaProvider } from "../kuna/KunaProvider.js";
+import { ParanoiaProvider } from "../paranoia/ParanoiaProvider.js";
 import type { Logger } from "pino";
 import { auxiliaryAnalysisProviderDeclarations } from "./auxiliaryAnalysisProviders.js";
 import { AnalysisProviderRegistry } from "../application/binary/AnalysisProviderRegistry.js";
@@ -49,6 +50,7 @@ const composeDeepBinarySession = (
   const ghidra = new GhidraProvider(config, logger, environment);
   const ida = new IdaProvider(config, environment);
   const kuna = new KunaProvider(environment);
+  const paranoia = new ParanoiaProvider(environment);
   const auxiliaryDeclarations =
     auxiliaryAnalysisProviderDeclarations(environment);
   const nativeInspectionAvailable =
@@ -60,7 +62,7 @@ const composeDeepBinarySession = (
     );
   return composeBinarySession(
     new AnalysisProviderRegistry(
-      [hopper, ghidra, ida, kuna],
+      [hopper, ghidra, ida, kuna, paranoia],
       config.analysisProvider,
       nativeInspectionAvailable ? isAppleDispatchMetadataTarget : undefined,
     ),
