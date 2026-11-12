@@ -12,6 +12,7 @@ import type {
 import type { BinaryTarget } from "../../../../src/domain/binaryTargetTypes.js";
 import type { JsonValue } from "../../../../src/domain/jsonValue.js";
 import { readParanoiaConfiguration } from "../../../../src/paranoia/ParanoiaConfiguration.js";
+import { inspectParanoiaProvider } from "../../../../src/paranoia/ParanoiaDoctor.js";
 import { ParanoiaProvider } from "../../../../src/paranoia/ParanoiaProvider.js";
 import { normalizeParanoiaAddress } from "../../../../src/paranoia/ParanoiaSessionClient.js";
 
@@ -311,4 +312,45 @@ describe.skipIf(!live)("Paranoia provider sessions", () => {
     expect(r.ok).toBe(false);
     void basename;
   }, 120_000);
+});
+
+describe("Paranoia doctor", () => {
+  it("reports a missing configuration as a missing engine", async () => {
+    const inspection = await withFileCloseOwner((fileCloseResources) =>
+      inspectParanoiaProvider({}, { fileCloseResources }),
+    );
+    expect(inspection).toMatchObject({
+      id: "paranoia",
+      configured: false,
+      available: false,
+      checks: [
+        {
+          name: "installation",
+          ok: false,
+          classification: "missing_analysis_engine",
+        },
+      ],
+    });
+  });
+
+  it.skipIf(!live)(
+    "reports the real executable's version and hash",
+    async () => {
+      const inspection = await withFileCloseOwner((fileCloseResources) =>
+        inspectParanoiaProvider(
+          { REA_PARANOIA_COMMAND: command ?? "" },
+          { fileCloseResources },
+        ),
+      );
+      expect(inspection.available).toBe(true);
+      expect(inspection.providerVersion).toMatch(/^\d+\.\d+\.\d+/u);
+      expect(inspection.checks[0]?.details?.["sha256"]).toMatch(
+        /^[0-9a-f]{64}$/u,
+      );
+      expect(inspection.registrationEnvironment).toEqual({
+        REA_PARANOIA_COMMAND: command,
+      });
+    },
+    60_000,
+  );
 });

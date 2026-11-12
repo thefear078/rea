@@ -69,7 +69,7 @@ const describe = (cause: unknown): string =>
   cause instanceof Error ? cause.message : String(cause);
 
 /** `paranoia --version` prints `paranoia <semver>`. */
-const probeVersion = async (
+export const probeVersion = async (
   command: string,
   signal: AbortSignal | undefined,
   launcher: ParanoiaProcessLauncher | undefined,
@@ -111,7 +111,7 @@ const probeVersion = async (
 };
 
 /** SHA-256 of the executable and the file identity that later runs compare against. */
-const hashExecutable = async (
+export const hashExecutable = async (
   command: string,
   options: AnalysisProfileResolutionOptions | undefined,
 ): Promise<Result<{ sha256: string; identity: string }, AnalysisError>> => {

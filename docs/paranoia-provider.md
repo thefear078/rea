@@ -8,6 +8,7 @@ Paranoia is static: it reads the selected image and never executes it. REA drive
 
 ```bash
 export REA_PARANOIA_COMMAND=/absolute/path/to/paranoia
+rea doctor --provider paranoia
 ```
 
 Select it explicitly with `--provider paranoia`, MCP's `open_binary.provider_id: "paranoia"`, or `REA_ANALYSIS_PROVIDER=paranoia`. With Paranoia and another provider configured for the same target, `auto` reports `ambiguous` instead of choosing one.
@@ -17,7 +18,7 @@ Select it explicitly with `--provider paranoia`, MCP's `open_binary.provider_id:
 | `REA_PARANOIA_COMMAND`    | none (required) | Absolute path of the `paranoia` executable.                  |
 | `REA_PARANOIA_TIMEOUT_MS` | 120 s           | Deadline for one `paranoia query` run (analysis and answer). |
 
-Targets: PE, ELF and thin Mach-O executables for x86, x86-64, AArch64, ARM, RISC-V, MIPS and PowerPC. Universal Mach-O files, archives and databases are rejected with a typed reason. `rea doctor --provider paranoia` is not wired yet; `REA_PARANOIA_COMMAND` problems show up when a target is opened.
+Targets: PE, ELF and thin Mach-O executables for x86, x86-64, AArch64, ARM, RISC-V, MIPS and PowerPC. Universal Mach-O files, archives and databases are rejected with a typed reason. `rea doctor --provider paranoia` checks the configuration, runs `paranoia --version` and hashes the executable.
 
 ## What Paranoia answers
 

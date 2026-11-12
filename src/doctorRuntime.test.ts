@@ -63,6 +63,27 @@ it("carries a validated REA_KUNA_COMMAND into the provider registration environm
   });
 });
 
+it("carries a validated REA_PARANOIA_COMMAND into the provider registration environment", async () => {
+  expect(DOCTOR_PROVIDER_IDS).toContain("paranoia");
+  const root = await createTestTempDirectory("rea-paranoia-registration-");
+  const paranoia = join(root, "paranoia");
+  await writeFile(paranoia, "#!/bin/sh\nprintf 'paranoia 0.8.0\\n'\n", {
+    mode: 0o700,
+  });
+
+  const inspections = await createSystemDoctorHost({
+    REA_PARANOIA_COMMAND: paranoia,
+  }).providerInspections?.();
+
+  expect(inspections?.find(({ id }) => id === "paranoia")).toMatchObject({
+    available: true,
+    providerVersion: "0.8.0",
+  });
+  expect(providerRegistrationEnvironment(inspections ?? [])).toMatchObject({
+    REA_PARANOIA_COMMAND: paranoia,
+  });
+});
+
 const createFakeJdk = async (root: string): Promise<string> => {
   const javaHome = join(root, "fake-jdk");
   const bin = join(javaHome, "bin");

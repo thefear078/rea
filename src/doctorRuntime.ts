@@ -8,6 +8,7 @@ import { inspectJadxProvider } from "./android/JadxDoctor.js";
 import { inspectSystemGhidraProvider } from "./ghidra/GhidraDoctor.js";
 import { inspectIdaRegistration } from "./ida/IdaDoctor.js";
 import { inspectKunaProvider } from "./kuna/KunaDoctor.js";
+import { inspectParanoiaProvider } from "./paranoia/ParanoiaDoctor.js";
 import { readIdaConfiguration } from "./ida/IdaConfiguration.js";
 import { parseJebMcpEndpoint } from "./jeb/JebMcpEndpoint.js";
 import { selectLinuxPrivateDisplayStrategy } from "./hopper/LinuxPrivateDisplayProbe.js";
@@ -58,6 +59,10 @@ export const createSystemDoctorHost = (
       ),
       await inspectKunaProvider(environment, process.platform, {
         fileCloseResources,
+      }),
+      await inspectParanoiaProvider(environment, {
+        fileCloseResources,
+        signal: inspectionSignal,
       }),
     ],
     linuxDemoRuntimeCheck: () => inspectLinuxPrivateDisplay(environment),
